@@ -19,11 +19,35 @@ class Wp_Solwininfotech_Assignment_2b
 	public function __construct(  )
 	{
 		add_action("wp_enqueue_scripts",array($this, 'wpsa_init_assets'));
+		add_filter( 'wpcf7_form_elements',  array( $this, 'enable_custom_wpcf7_shortcodes' ));
+		add_shortcode( 'ticket_book_cf7', array( $this,'ticket_book_cf7' ));
 	}
 
 	function wpsa_init_assets(  ) {
 			wp_register_style( 'wpsa_assignment_2b_main', plugin_dir_url( __FILE__ ).'assets/css/wpsa_main.css',null );
 			wp_enqueue_style( 'wpsa_assignment_2b_main' );
+	}
+
+	function enable_custom_wpcf7_shortcodes( $form ) {
+		$form = do_shortcode( $form );
+		return $form;
+	}
+
+	function ticket_book_cf7(  ) {
+
+		$short_code = "";
+		for ( $i=0; $i < 100 ; $i++ ) {
+			$checkbox_name = $this->checkbox_option_prefix.$i.$this->checkbox_option_postfix;
+			$short_code .= "<div class='wpsa_cf7_checkbox'>";
+			$short_code .= "<label for='$checkbox_name'> ticket number {$i}</label>";
+			$short_code .= "<input type='checkbox' name='$checkbox_name' ";
+			if(!empty($options['wpsa_checkbox_field_'.$i])) {
+				$short_code .= checked( $options['wpsa_checkbox_field_'.$i], 1 );
+			}
+			$short_code .= " value='1'>";
+			$short_code .= "</div>";
+		}
+		echo $short_code;
 	}
 
 	public static function create_plugin_database_tables()
