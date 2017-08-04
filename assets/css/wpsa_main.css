@@ -1,0 +1,17 @@
+
+/* Plugin CSS Styles Start Here */
+
+.wpsa_cf7_checkbox
+{
+    display: inline-block;
+    padding: 10px 20px;
+}
+
+.wpsa_cf7_checkbox input[type="checkbox"]{
+    margin-Left: 5px;
+} 
+
+.wpsa_multi_slelect_box {
+    display: inline-block;
+    width: 400px;
+}
