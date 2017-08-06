@@ -139,7 +139,6 @@ class Wp_Solwininfotech_Assignment_2b
 	new Wp_Solwininfotech_Assignment_2b( );
 
 	global $wpsa_2b_db_version;
-	global $columns_to_update, $columns_to_update_format;
 	$wpsa_2b_db_version = "1.0";
-	//Wp_Solwininfotech_Assignment_2b::create_plugin_database_tables();
+	
 	register_activation_hook( __FILE__, array('Wp_Solwininfotech_Assignment_2b', 'create_plugin_database_tables' ));
