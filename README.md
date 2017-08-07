@@ -5,6 +5,7 @@ Tested up to: 4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
+
 Plugin for Assignment 2b from here: https://www.solwininfotech.com/career/wordpress-developer/wordpress-assignments/
 
 == Description ==
@@ -14,13 +15,14 @@ Create shortcode for plugin [ticket_book_cf7].
 
 ##  Admin-Side:
 
-    Add shortcode [ticket_book_cf7] in form before submit button.
+    * Add shortcode [ticket_book_cf7] in form before submit button.
 
 ## Front-end:
 
-    At front side, new field with 100 checkboxes should be displayed in contact form.
-    At first time, all checkboxes should be enabled. User can select any checkboxes from them and submit the form.
-    Next time, when user come to this page, 100 checkboxes will be displayed, but previously submitted checkboxes should be disabled. So user can’t book those same ticket number again.
+    * At front side, new field with 100 checkboxes should be displayed in contact form.
+    * At first time, all checkboxes should be enabled. User can select any checkboxes from them and submit the form.
+    * Next time, when user come to this page, 100 checkboxes will be displayed, but previously submitted checkboxes 
+    should be disabled. So user can’t book those same ticket number again.
 
 == Installation ==
  
