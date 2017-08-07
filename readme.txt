@@ -12,11 +12,6 @@ Plugin for Assignment 2b from here: https://www.solwininfotech.com/career/wordpr
 On activation of plugin, plugin should create one database table and by default 100 fields with 0 value should be added.
 Create shortcode for plugin [ticket_book_cf7].
 
-Front-end:
-
-    
-    
-    
 ##  Admin-Side:
 
     Add shortcode [ticket_book_cf7] in form before submit button.
