@@ -13,6 +13,17 @@ Domain Path: /languages
 Text Domain: wp_solwininfotech_assignment_2b
 */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/* Global variables and constants */
+global $wpsa_2b_db_version;
+$wpsa_2b_db_version = '1.0';
+
+define( 'WPSA_PLUGIN_NAME', 'wp-solwininfotech-assignment-2b');
+define( 'WPSA_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+
+
 /**
  * Solwininfotech Assignment 2b Class.
  *
@@ -61,6 +72,7 @@ class Wp_Solwininfotech_Assignment_2b {
 				add_shortcode( 'ticket_book_cf7', array( $this, 'ticket_book_cf7' ) );
 				add_action( 'wpcf7_submit', array( $this, 'action_wpcf7_submit' ) );
 				add_filter( 'wpcf7_load_js', '__return_false' );
+			//echo is_plugin_active('../class-wp-solwininfotech-assignment-2b.php');
 	}
 
 	/**
@@ -94,7 +106,7 @@ class Wp_Solwininfotech_Assignment_2b {
 		$ticket_book_cf7_short_code = '';
 		$saved_ticket_checkboxes = $this->get_saved_ticket_checkboxes();
 			for ( $i = 1 ; $i <= 10 ; $i++ ) {
-							$checkbox_name = $this->ticket_checkbox_name . "[" . $this->ticket_checkbox_option_name . $i ."]";
+							$checkbox_name = $this->ticket_checkbox_name . '[' . $this->ticket_checkbox_option_name . $i .']';
 							$ticket_book_cf7_short_code .= "<div class='wpsa_cf7_checkbox'>";
 							$ticket_book_cf7_short_code .= "<label for='$checkbox_name'> ticket number {$i}</label>";
 							$ticket_book_cf7_short_code .= "<input type='checkbox' name='$checkbox_name' ";
@@ -201,8 +213,5 @@ class Wp_Solwininfotech_Assignment_2b {
 }
 
 	new Wp_Solwininfotech_Assignment_2b();
-
-	global $wpsa_2b_db_version;
-	$wpsa_2b_db_version = '1.0';
 
 	register_activation_hook( __FILE__, array( 'Wp_Solwininfotech_Assignment_2b', 'create_plugin_database_tables' ) );
