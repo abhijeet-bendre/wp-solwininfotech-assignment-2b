@@ -36,11 +36,11 @@ class Wp_Solwininfotech_Assignment_2b {
 	 */
 	private $ticket_checkbox_name = 'wpsa_cf7_addon';
 
-		/**
-		 * Checkbox option name for ticket booking addon.
-		 *
-		 * @var string
-		 */
+	/**
+	 * Checkbox option name for ticket booking addon.
+	 *
+	 * @var string
+	 */
 	private $ticket_checkbox_option_name = 'wpsa_cf7_checkbox_field_';
 
 	/**
@@ -74,7 +74,7 @@ class Wp_Solwininfotech_Assignment_2b {
 	}
 
 	/**
-	 * Render third party shortcodes (such as [ticket_book_cf7]) in cf7 form (which doesn't render by default).
+	 * Render third party shortcodes (such as [ticket_book_cf7]) in cf7 forms (which doesn't render by default).
 	 *
 	 * @param string $form cf7 form.
 	 * @since 0.1
