@@ -93,26 +93,20 @@ class Wp_Solwininfotech_Assignment_2b {
 
 		$ticket_book_cf7_short_code = '';
 		$saved_ticket_checkboxes = $this->get_saved_ticket_checkboxes();
-		if ( '' !== $saved_ticket_checkboxes ) {
 			for ( $i = 1 ; $i <= 10 ; $i++ ) {
-							$checkbox_name = $this->ticket_checkbox_name[ $this->ticket_checkbox_option_name . $i ];
+							$checkbox_name = $this->ticket_checkbox_name . "[" . $this->ticket_checkbox_option_name . $i ."]";
 							$ticket_book_cf7_short_code .= "<div class='wpsa_cf7_checkbox'>";
 							$ticket_book_cf7_short_code .= "<label for='$checkbox_name'> ticket number {$i}</label>";
 							$ticket_book_cf7_short_code .= "<input type='checkbox' name='$checkbox_name' ";
-				if ( in_array( $i, $saved_ticket_checkboxes, true ) ) {
-					$ticket_book_cf7_short_code .= 'checked=checked ';
-					$ticket_book_cf7_short_code .= 'disabled=disabled';
-				}
+							if ( '' !== $saved_ticket_checkboxes && in_array( $i, $saved_ticket_checkboxes, true ) ) {
+								$ticket_book_cf7_short_code .= 'checked=checked ';
+								$ticket_book_cf7_short_code .= 'disabled=disabled';
+							}
 				$ticket_book_cf7_short_code .= " value='1'>";
 				$ticket_book_cf7_short_code .= '</div>';
 			}
 			return $ticket_book_cf7_short_code;
-		} else {
-			$error = '<div class="error notice">';
-			$error .= __( 'An error occoured. Please contact Administrator! ', 'wp_solwininfotech_assignment_2b' );
-			$error .= '</div>';
-			echo esc_html( $error );
-		}
+
 	}
 
 		/**
@@ -125,13 +119,13 @@ class Wp_Solwininfotech_Assignment_2b {
 			$columns_to_update = array();
 			$field_id          = '';
 
-		if ( ! empty( $_POST[ $this->ticket_checkbox_name ] ) ) { // Input var okay.
+			if ( ! empty( $_POST[ $this->ticket_checkbox_name ] ) ) { // Input var okay.
 				$ticket_checkboxes_selected = sanitize_text_field( wp_unslash( $_POST[ $this->ticket_checkbox_name ] ) ); // Input var okay.
-			foreach ( $ticket_checkboxes_selected as $ticket_checkbox_key => $ticket_checkbox_value ) {
+				foreach ( $ticket_checkboxes_selected as $ticket_checkbox_key => $ticket_checkbox_value ) {
 					$field_id = strchr( $ticket_checkbox_key , $this->ticket_checkbox_option_name );
 					$field_id = explode( '_' , $ticket_checkbox_key );
 					$columns_to_update[ 'field_' . (int) $field_id[4] ] = 1;
-			}
+				}
 				$wpdb->update(
 					$table_prefix . '' . self::$_tblname,
 					$columns_to_update,
@@ -157,15 +151,19 @@ class Wp_Solwininfotech_Assignment_2b {
 				// Check if table is exists.
 			$table_exists = $wpdb->get_var( "show tables like '$wp_track_table'" );
 
-		if ( '' !== $table_exists ) {
-					$saved_ticket_checkboxes_sql = "SELECT * from $table_prefix" . self::$_tblname . " where id = {$this->ticket_addon_table_primary_key}";
-					$results = $wpdb->get_results( $saved_ticket_checkboxes_sql, ARRAY_N );
-			if ( ! empty( $results ) ) {
-					$saved_ticket_checkboxes = array_keys( $results[0], '1', true );
+			if ( '' !== $table_exists ) {
+						$saved_ticket_checkboxes_sql = "SELECT * from $table_prefix" . self::$_tblname . " where id = {$this->ticket_addon_table_primary_key}";
+						$results = $wpdb->get_results( $saved_ticket_checkboxes_sql, ARRAY_N );
+						if ( ! empty( $results ) ) {
+							$saved_ticket_checkboxes = array_keys( $results[0], '1', true );
+						}
+			} else {
+				$error = '<div class="error notice">';
+				$error .= __( 'An error occoured. Please contact Administrator! ', 'wp_solwininfotech_assignment_2b' );
+				$error .= '</div>';
+				$error .= '<br/>';
+				echo esc_html( $error );
 			}
-		} else {
-			$saved_ticket_checkboxes = '';
-		}
 			return $saved_ticket_checkboxes;
 	}
 
