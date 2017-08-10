@@ -44,6 +44,20 @@ class Wp_Solwininfotech_Assignment_2b_Test extends WP_UnitTestCase {
 		}
 
 		/**
+		 * Test if no of checkboxes are 100
+		 */
+		function test_if_no_of_checkboxes_are_100() {
+			$this->assertEquals( 100, Wp_Solwininfotech_Assignment_2b::NO_OF_CHECKBOXES );
+		}
+
+		/**
+		 * Test if hard coded ticket addon table primary_key is 1
+		 */
+		function test_ticket_addon_primary_key() {
+			$this->assertEquals( 1, Wp_Solwininfotech_Assignment_2b::TICKET_ADDON_TABLE_PKEY );
+		}
+
+		/**
 		* Setup of 'tearDownAfterClass' test fixture
 		*/
 		public static function tearDownAfterClass()
