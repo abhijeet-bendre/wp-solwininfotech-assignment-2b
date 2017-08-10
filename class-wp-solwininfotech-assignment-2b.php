@@ -155,7 +155,7 @@ class Wp_Solwininfotech_Assignment_2b {
 					'ID' => $this->ticket_addon_table_primary_key,
 				),
 				'%s'
-			);
+			); // db call ok; no-cache ok.
 		}
 	}
 
@@ -171,11 +171,11 @@ class Wp_Solwininfotech_Assignment_2b {
 		 $wp_track_table              = $table_prefix . self::$_tblname;
 
 		 // Check if table is exists.
-		 $table_exists = $wpdb->get_var( $wpdb->prepare( "show tables like '%s'", $wp_track_table ) );
+		 $table_exists = $wpdb->get_var( $wpdb->prepare( "show tables like '%s'", $wp_track_table ) ); // db call ok; no-cache ok.
 
 		if ( '' !== $table_exists ) {
 			$saved_ticket_checkboxes_sql =
-			$results = $wpdb->get_results( $wpdb->prepare( "SELECT * from '%s' where id = '%d'" , $table_prefix . self::$_tblname, self::TICKET_ADDON_TABLE_PKEY ), ARRAY_N );
+			$results = $wpdb->get_results( $wpdb->prepare( "SELECT * from '%s' where id = '%d'" , $table_prefix . self::$_tblname, self::TICKET_ADDON_TABLE_PKEY ), ARRAY_N ); // db call ok; no-cache ok.
 			if ( ! empty( $results ) ) {
 				 $saved_ticket_checkboxes = array_keys( $results[0], '1', true );
 			}
@@ -202,8 +202,8 @@ class Wp_Solwininfotech_Assignment_2b {
 		$columns_to_insert  = '';
 
 		 // Check to see if the table exists already, if not, then create it.
-		$table_exists = $wpdb->get_var( $wpdb->prepare( "show tables like '%s'", $wp_track_table ) );
-		if ( $wpdb->get_var( $wpdb->prepare( "show tables like '%s'", $wp_track_table ) ) !== $wp_track_table ) {
+		$table_exists = $wpdb->get_var( $wpdb->prepare( "show tables like '%s'", $wp_track_table ) ); // db call ok; no-cache ok.
+		if ( $table_exists !== $wp_track_table ) {
 				$create_sql = 'CREATE TABLE `' . $wp_track_table . '` (';
 				$create_sql .= '`id` INT(11) NOT NULL AUTO_INCREMENT ,';
 			for ( $i = 1; $i <= self::NO_OF_CHECKBOXES ; $i++ ) {
@@ -217,7 +217,7 @@ class Wp_Solwininfotech_Assignment_2b {
 			for ( $i = 1; $i <= self::NO_OF_CHECKBOXES ; $i++ ) {
 					$columns_to_insert[ "field_{$i}" ] = 0;
 			}
-						$wpdb->insert( $wp_track_table, $columns_to_insert, array( '%s' ) );  // db call ok.
+				$wpdb->insert( $wp_track_table, $columns_to_insert, array( '%s' ) );  // db call ok; no-cache ok.
 				add_option( 'wpsa_2b_db_version', $wpsa_2b_db_version );
 		}
 	}
