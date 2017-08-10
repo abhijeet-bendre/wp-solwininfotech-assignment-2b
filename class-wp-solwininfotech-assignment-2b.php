@@ -1,4 +1,10 @@
 <?php
+/**
+ * Assignment-2b: Ticket booking add-on for Contact Form 7 plugin
+ *
+ * @package Solwin Infotech Plugin Assignment-2b
+ * @version 0.1
+ */
 
 /*
 Plugin Name: Solwin Infotech Plugin Assignment-2b
@@ -21,9 +27,8 @@ Text Domain: wp_solwininfotech_assignment_2b
 	global $wpsa_2b_db_version;
 	$wpsa_2b_db_version = '1.0';
 
-	define( 'WPSA_PLUGIN_NAME', 'wp-solwininfotech-assignment-2b');
+	define( 'WPSA_PLUGIN_NAME', 'wp-solwininfotech-assignment-2b' );
 	define( 'WPSA_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
-
 
 /**
  * Solwininfotech Assignment 2b Class.
@@ -34,191 +39,189 @@ Text Domain: wp_solwininfotech_assignment_2b
  */
 class Wp_Solwininfotech_Assignment_2b {
 
-	/**
-	 * Tablename for ticket booking addon.
-	 *
-	 * @var static
-	 */
+	 /**
+	  * Tablename for ticket booking addon.
+	  *
+	  * @var static
+	  */
 	public static $_tblname = 'assignment_2b_ticket_booking';
 
-	/**
-	 * Checkbox name for ticket booking addon.
-	 *
-	 * @var string
-	 */
+	 /**
+	  * Checkbox name for ticket booking addon.
+	  *
+	  * @var string
+	  */
 	private $ticket_checkbox_name = 'wpsa_cf7_addon';
 
-	/**
-	 * Checkbox option name for ticket booking addon.
-	 *
-	 * @var string
-	 */
+	 /**
+	  * Checkbox option name for ticket booking addon.
+	  *
+	  * @var string
+	  */
 	private $ticket_checkbox_option_name = 'wpsa_cf7_checkbox_field_';
 
-	/**
+	 /**
 	 * Primary key for table tablename.
 	 *
 	 * @var const $ticket_addon_table_primary_key
 	 */
-	const TICKET_ADDON_TABLE_PKEY = 1;
+	 const TICKET_ADDON_TABLE_PKEY = 1;
 
-	/**
+	 /**
 	 * Primary key for table tablename.
 	 *
 	 * @var const NO_OF_CHECKBOXES
 	 */
-	const NO_OF_CHECKBOXES = 100;
+	 const NO_OF_CHECKBOXES = 100;
 
-	/**
-	 * Constructor for this class
-	 *
-	 * @since 0.1
-	 */
+	 /**
+	  * Constructor for this class
+	  *
+	  * @since 0.1
+	  */
 	public function __construct() {
-				add_action( 'wp_enqueue_scripts', array( $this, 'wpsa_init_assets' ) );
-				add_filter( 'wpcf7_form_elements', array( $this, 'enable_custom_wpcf7_shortcodes' ) );
-				add_shortcode( 'ticket_book_cf7', array( $this, 'ticket_book_cf7' ) );
-				add_action( 'wpcf7_submit', array( $this, 'action_wpcf7_submit' ) );
-				add_filter( 'wpcf7_load_js', '__return_false' );
-				//var_dump(get_option('active_plugins'));
+		 add_action( 'wp_enqueue_scripts', array( $this, 'wpsa_init_assets' ) );
+		 add_filter( 'wpcf7_form_elements', array( $this, 'enable_custom_wpcf7_shortcodes' ) );
+		 add_shortcode( 'ticket_book_cf7', array( $this, 'ticket_book_cf7' ) );
+		 add_action( 'wpcf7_submit', array( $this, 'action_wpcf7_submit' ) );
+		 add_filter( 'wpcf7_load_js', '__return_false' );
 	}
 
-	/**
-	 * Init assets such as JS/CSS, required by plugin
-	 *
-	 * @since 0.1
-	 */
+	 /**
+	  * Init assets such as JS/CSS, required by plugin
+	  *
+	  * @since 0.1
+	  */
 	public function wpsa_init_assets() {
-				wp_register_style( 'wpsa_assignment_2b_main', plugin_dir_url( __FILE__ ) . 'assets/css/wpsa_main.css', null );
-				wp_enqueue_style( 'wpsa_assignment_2b_main' );
+		 wp_register_style( 'wpsa_assignment_2b_main', plugin_dir_url( __FILE__ ) . 'assets/css/wpsa_main.css', null );
+		 wp_enqueue_style( 'wpsa_assignment_2b_main' );
 	}
 
-	/**
-	 * Render third party shortcodes (such as [ticket_book_cf7]) in cf7 forms (which doesn't render by default).
-	 *
-	 * @param string $form cf7 form.
-	 * @since 0.1
-	 */
+	 /**
+	  * Render third party shortcodes (such as [ticket_book_cf7]) in cf7 forms (which doesn't render by default).
+	  *
+	  * @param string $form cf7 form.
+	  * @since 0.1
+	  */
 	public function enable_custom_wpcf7_shortcodes( $form ) {
-			$form = do_shortcode( $form );
-			return $form;
+		 $form = do_shortcode( $form );
+		 return $form;
 	}
 
-	/**
-	 * Call back function for [ticket_book_cf7] shortcode
-	 *
-	 * @since 0.1
-	 */
+	 /**
+	  * Call back function for [ticket_book_cf7] shortcode
+	  *
+	  * @since 0.1
+	  */
 	public function ticket_book_cf7() {
-
 		$ticket_book_cf7_short_code = '';
 		$saved_ticket_checkboxes = $this->get_saved_ticket_checkboxes();
-			for ( $i = 1 ; $i <= self::NO_OF_CHECKBOXES ; $i++ ) {
-							$checkbox_name = $this->ticket_checkbox_name . '[' . $this->ticket_checkbox_option_name . $i .']';
-							$ticket_book_cf7_short_code .= "<div class='wpsa_cf7_checkbox'>";
-							$ticket_book_cf7_short_code .= "<label for='$checkbox_name'> ticket number {$i}</label>";
-							$ticket_book_cf7_short_code .= "<input type='checkbox' name='$checkbox_name' ";
-							if ( '' !== $saved_ticket_checkboxes && in_array( $i, $saved_ticket_checkboxes, true ) ) {
-								$ticket_book_cf7_short_code .= 'checked=checked ';
-								$ticket_book_cf7_short_code .= 'disabled=disabled';
-							}
-				$ticket_book_cf7_short_code .= " value='1'>";
-				$ticket_book_cf7_short_code .= '</div>';
+		for ( $i = 1 ; $i <= self::NO_OF_CHECKBOXES ; $i++ ) {
+			$checkbox_name = $this->ticket_checkbox_name . '[' . $this->ticket_checkbox_option_name . $i . ']';
+			$ticket_book_cf7_short_code .= "<div class='wpsa_cf7_checkbox'>";
+			$ticket_book_cf7_short_code .= "<label for='$checkbox_name'> ticket number {$i}</label>";
+			$ticket_book_cf7_short_code .= "<input type='checkbox' name='$checkbox_name' ";
+			if ( '' !== $saved_ticket_checkboxes && in_array( $i, $saved_ticket_checkboxes, true ) ) {
+				 $ticket_book_cf7_short_code .= 'checked=checked ';
+				 $ticket_book_cf7_short_code .= 'disabled=disabled';
 			}
-			return $ticket_book_cf7_short_code;
-
+			$ticket_book_cf7_short_code .= " value='1'>";
+			$ticket_book_cf7_short_code .= '</div>';
+		}
+		return $ticket_book_cf7_short_code;
 	}
 
-		/**
-		 * Hook fired after submmitiing wpcf7 form.
-		 *
-		 * @since 0.1
-		 */
+	 /**
+	  * Hook fired after submmitiing wpcf7 form.
+	  *
+	  * @since 0.1
+	  */
 	function action_wpcf7_submit() {
-			global $table_prefix, $wpdb;
-			$columns_to_update = array();
-			$field_id          = '';
+		 global $table_prefix, $wpdb;
+		 $columns_to_update = array();
+		 $field_id          = '';
 
-			if ( ! empty( $_POST[ $this->ticket_checkbox_name ] ) ) { // Input var okay.
-				$ticket_checkboxes_selected = sanitize_text_field( wp_unslash( $_POST[ $this->ticket_checkbox_name ] ) ); // Input var okay.
-				foreach ( $ticket_checkboxes_selected as $ticket_checkbox_key => $ticket_checkbox_value ) {
-					$field_id = strchr( $ticket_checkbox_key , $this->ticket_checkbox_option_name );
-					$field_id = explode( '_' , $ticket_checkbox_key );
-					$columns_to_update[ 'field_' . (int) $field_id[4] ] = 1;
-				}
-				$wpdb->update(
-					$table_prefix . '' . self::$_tblname,
-					$columns_to_update,
-					array(
-						'ID' => $this->ticket_addon_table_primary_key,
-					),
-					'%s'
-				);
+		if ( ! empty( $_POST[ $this->ticket_checkbox_name ] ) ) { // Input var okay.
+			$ticket_checkboxes_selected = sanitize_text_field( wp_unslash( $_POST[ $this->ticket_checkbox_name ] ) ); // Input var okay.
+			foreach ( $ticket_checkboxes_selected as $ticket_checkbox_key => $ticket_checkbox_value ) {
+				 $field_id = strchr( $ticket_checkbox_key, $this->ticket_checkbox_option_name );
+				 $field_id = explode( '_', $ticket_checkbox_key );
+				 $columns_to_update[ 'field_' . (int) $field_id[4] ] = 1;
+			}
+			$wpdb->update(
+				$table_prefix . '' . self::$_tblname,
+				$columns_to_update,
+				array(
+					'ID' => $this->ticket_addon_table_primary_key,
+				),
+				'%s'
+			);
 		}
 	}
 
-	/**
-	 * Function for retireving saved ticket checkboxes from database.
-	 *
-	 * @since 0.1
-	 */
+	 /**
+	  * Function for retireving saved ticket checkboxes from database.
+	  *
+	  * @since 0.1
+	  */
 	public function get_saved_ticket_checkboxes() {
-			global $table_prefix, $wpdb;
-			$saved_ticket_checkboxes     = array();
-			$saved_ticket_checkboxes_sql = '';
-			$wp_track_table              = $table_prefix . self::$_tblname;
+		 global $table_prefix, $wpdb;
+		 $saved_ticket_checkboxes     = array();
+		 $saved_ticket_checkboxes_sql = '';
+		 $wp_track_table              = $table_prefix . self::$_tblname;
 
-				// Check if table is exists.
-			$table_exists = $wpdb->get_var( "show tables like '$wp_track_table'" );
+		 // Check if table is exists.
+		 $table_exists = $wpdb->get_var( $wpdb->prepare( "show tables like '%s'", $wp_track_table ) );
 
-			if ( '' !== $table_exists ) {
-						$saved_ticket_checkboxes_sql = "SELECT * from $table_prefix" . self::$_tblname . ' where id = ' . self::TICKET_ADDON_TABLE_PKEY;
-						$results = $wpdb->get_results( $saved_ticket_checkboxes_sql, ARRAY_N );
-						if ( ! empty( $results ) ) {
-							$saved_ticket_checkboxes = array_keys( $results[0], '1', true );
-						}
-			} else {
-				$error = '<div class="error notice">';
-				$error .= __( 'An error occoured. Please contact Administrator! ', 'wp_solwininfotech_assignment_2b' );
-				$error .= '</div>';
-				$error .= '<br/>';
-				echo esc_html( $error );
+		if ( '' !== $table_exists ) {
+			$saved_ticket_checkboxes_sql =
+			$results = $wpdb->get_results( $wpdb->prepare( "SELECT * from '%s' where id = '%d'" , $table_prefix . self::$_tblname, self::TICKET_ADDON_TABLE_PKEY ), ARRAY_N );
+			if ( ! empty( $results ) ) {
+				 $saved_ticket_checkboxes = array_keys( $results[0], '1', true );
 			}
-			return $saved_ticket_checkboxes;
+		} else {
+			 $error = '<div class="error notice">';
+			 $error .= __( 'An error occoured. Please contact Administrator! ', 'wp_solwininfotech_assignment_2b' );
+			 $error .= '</div>';
+			 $error .= '<br/>';
+			 echo esc_html( $error );
+		}
+		 return $saved_ticket_checkboxes;
 	}
 
-	/**
-	 * A static function for creating plugin tables
-	 *
-	 * @since 0.1
-	 */
+	 /**
+	  * A static function for creating plugin tables
+	  *
+	  * @since 0.1
+	  */
 	public static function create_plugin_database_tables() {
-		global $table_prefix, $wpdb, $wpsa_2b_db_version;
+		 global $table_prefix, $wpdb, $wpsa_2b_db_version;
 
 		$wp_track_table = $table_prefix . self::$_tblname;
 		$charset_collate = $wpdb->get_charset_collate();
 		$columns_to_insert  = '';
 
-		// Check to see if the table exists already, if not, then create it.
-		if ( $wpdb->get_var( "show tables like '$wp_track_table'" ) !== $wp_track_table ) { // db call ok.
-			$create_sql = 'CREATE TABLE `' . $wp_track_table . '` (';
-			$create_sql .= '`id` INT(11) NOT NULL AUTO_INCREMENT ,';
+		 // Check to see if the table exists already, if not, then create it.
+		$table_exists = $wpdb->get_var( $wpdb->prepare( "show tables like '%s'", $wp_track_table ) );
+		if ( $wpdb->get_var( $wpdb->prepare( "show tables like '%s'", $wp_track_table ) ) !== $wp_track_table ) {
+				$create_sql = 'CREATE TABLE `' . $wp_track_table . '` (';
+				$create_sql .= '`id` INT(11) NOT NULL AUTO_INCREMENT ,';
 			for ( $i = 1; $i <= self::NO_OF_CHECKBOXES ; $i++ ) {
-					$create_sql .= '`field_' . $i . '` CHAR(1) NOT NULL DEFAULT "0" ,';
+						$create_sql .= '`field_' . $i . '` CHAR(1) NOT NULL DEFAULT "0" ,';
 			}
 			$create_sql .= ' PRIMARY KEY (`id`)) ' . $charset_collate;
 
-			require_once( ABSPATH . '/wp-admin/includes/upgrade.php' );
+			include_once ABSPATH . '/wp-admin/includes/upgrade.php';
 			$dbdelta = dbDelta( $create_sql );
 
 			for ( $i = 1; $i <= self::NO_OF_CHECKBOXES ; $i++ ) {
 					$columns_to_insert[ "field_{$i}" ] = 0;
 			}
-			$wpdb->insert( $wp_track_table, $columns_to_insert, array( '%s' ) );  // db call ok.
-			add_option( 'wpsa_2b_db_version', $wpsa_2b_db_version );
+						$wpdb->insert( $wp_track_table, $columns_to_insert, array( '%s' ) );  // db call ok.
+				add_option( 'wpsa_2b_db_version', $wpsa_2b_db_version );
 		}
 	}
 }
 
-	new Wp_Solwininfotech_Assignment_2b();
-	register_activation_hook( __FILE__, array( 'Wp_Solwininfotech_Assignment_2b', 'create_plugin_database_tables' ) );
+new Wp_Solwininfotech_Assignment_2b();
+register_activation_hook( __FILE__, array( 'Wp_Solwininfotech_Assignment_2b', 'create_plugin_database_tables' ) );
