@@ -58,6 +58,29 @@ class Wp_Solwininfotech_Assignment_2b_Test extends WP_UnitTestCase {
 		}
 
 		/**
+		 * Test if data can be inserted in table
+		 */
+		function test_data_can_be_inserted_in_table() {
+			global $wpdb;
+			$columns_to_insert = array();
+
+			for ( $i = 1; $i <= Wp_Solwininfotech_Assignment_2b::NO_OF_CHECKBOXES ; $i++ ) {
+				$columns_to_insert[ "field_{$i}" ] = 0;
+			}
+			$insert = $wpdb->insert( self::$wp_track_table, $columns_to_insert, array( '%s' ));
+			$this->assertNotEquals( false, $insert ) ;
+			return $insert;
+		}
+
+		/**
+		  * Test if last insert id is 1
+			*/
+			function test_if_last_insert_id_is_1() {
+				global $wpdb;
+				$this->assertEquals( 1, $wpdb->insert_id );
+			}
+
+		/**
 		* Setup of 'tearDownAfterClass' test fixture
 		*/
 		public static function tearDownAfterClass()
