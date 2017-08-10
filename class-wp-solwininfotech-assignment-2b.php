@@ -13,15 +13,16 @@ Domain Path: /languages
 Text Domain: wp_solwininfotech_assignment_2b
 */
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+	namespace  Wp_Solwininfotech_Assignment_2b;
+	// Exit if accessed directly.
+	defined( 'ABSPATH' ) || exit;
 
-/* Global variables and constants */
-global $wpsa_2b_db_version;
-$wpsa_2b_db_version = '1.0';
+	/* Global variables and constants */
+	global $wpsa_2b_db_version;
+	$wpsa_2b_db_version = '1.0';
 
-define( 'WPSA_PLUGIN_NAME', 'wp-solwininfotech-assignment-2b');
-define( 'WPSA_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+	define( 'WPSA_PLUGIN_NAME', 'wp-solwininfotech-assignment-2b');
+	define( 'WPSA_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 
 
 /**
@@ -38,7 +39,7 @@ class Wp_Solwininfotech_Assignment_2b {
 	 *
 	 * @var static
 	 */
-	private static $_tblname = 'assignment_2b_ticket_booking';
+	public static $_tblname = 'assignment_2b_ticket_booking';
 
 	/**
 	 * Checkbox name for ticket booking addon.
@@ -57,9 +58,16 @@ class Wp_Solwininfotech_Assignment_2b {
 	/**
 	 * Primary key for table tablename.
 	 *
-	 * @var string $ticket_addon_table_primary_key
+	 * @var const $ticket_addon_table_primary_key
 	 */
-	private $ticket_addon_table_primary_key = 1;
+	const TICKET_ADDON_TABLE_PKEY = 1;
+
+	/**
+	 * Primary key for table tablename.
+	 *
+	 * @var const NO_OF_CHECKBOXES
+	 */
+	const NO_OF_CHECKBOXES = 10;
 
 	/**
 	 * Constructor for this class
@@ -72,7 +80,7 @@ class Wp_Solwininfotech_Assignment_2b {
 				add_shortcode( 'ticket_book_cf7', array( $this, 'ticket_book_cf7' ) );
 				add_action( 'wpcf7_submit', array( $this, 'action_wpcf7_submit' ) );
 				add_filter( 'wpcf7_load_js', '__return_false' );
-			//echo is_plugin_active('../class-wp-solwininfotech-assignment-2b.php');
+				//var_dump(get_option('active_plugins'));
 	}
 
 	/**
@@ -105,7 +113,7 @@ class Wp_Solwininfotech_Assignment_2b {
 
 		$ticket_book_cf7_short_code = '';
 		$saved_ticket_checkboxes = $this->get_saved_ticket_checkboxes();
-			for ( $i = 1 ; $i <= 10 ; $i++ ) {
+			for ( $i = 1 ; $i <= self::NO_OF_CHECKBOXES ; $i++ ) {
 							$checkbox_name = $this->ticket_checkbox_name . '[' . $this->ticket_checkbox_option_name . $i .']';
 							$ticket_book_cf7_short_code .= "<div class='wpsa_cf7_checkbox'>";
 							$ticket_book_cf7_short_code .= "<label for='$checkbox_name'> ticket number {$i}</label>";
@@ -164,7 +172,7 @@ class Wp_Solwininfotech_Assignment_2b {
 			$table_exists = $wpdb->get_var( "show tables like '$wp_track_table'" );
 
 			if ( '' !== $table_exists ) {
-						$saved_ticket_checkboxes_sql = "SELECT * from $table_prefix" . self::$_tblname . " where id = {$this->ticket_addon_table_primary_key}";
+						$saved_ticket_checkboxes_sql = "SELECT * from $table_prefix" . self::$_tblname . ' where id = ' . self::TICKET_ADDON_TABLE_PKEY;
 						$results = $wpdb->get_results( $saved_ticket_checkboxes_sql, ARRAY_N );
 						if ( ! empty( $results ) ) {
 							$saved_ticket_checkboxes = array_keys( $results[0], '1', true );
@@ -192,18 +200,18 @@ class Wp_Solwininfotech_Assignment_2b {
 		$columns_to_insert  = '';
 
 		// Check to see if the table exists already, if not, then create it.
-		if ( $wpdb->get_var( "show tables like $wp_track_table" ) !== $wp_track_table ) { // db call ok.
-							$create_sql = 'CREATE TABLE `' . $wp_track_table . '` (';
-				$create_sql .= '`id INT(11) NOT NULL AUTO_INCREMENT ,';
-			for ( $i = 1; $i <= 100 ; $i++ ) {
-					$create_sql .= '`field_' . $i . '` CHAR(1) NOT NULL DEFAULT `0` ,';
+		if ( $wpdb->get_var( "show tables like '$wp_track_table'" ) !== $wp_track_table ) { // db call ok.
+			$create_sql = 'CREATE TABLE `' . $wp_track_table . '` (';
+			$create_sql .= '`id` INT(11) NOT NULL AUTO_INCREMENT ,';
+			for ( $i = 1; $i <= self::NO_OF_CHECKBOXES ; $i++ ) {
+					$create_sql .= '`field_' . $i . '` CHAR(1) NOT NULL DEFAULT "0" ,';
 			}
-			$create_sql .= 'PRIMARY KEY (`id`)) ' . $charset_collate;
+			$create_sql .= ' PRIMARY KEY (`id`)) ' . $charset_collate;
+
 			require_once( ABSPATH . '/wp-admin/includes/upgrade.php' );
+			$dbdelta = dbDelta( $create_sql );
 
-			dbDelta( $create_sql );
-
-			for ( $i = 1; $i <= 100 ; $i++ ) {
+			for ( $i = 1; $i <= self::NO_OF_CHECKBOXES ; $i++ ) {
 					$columns_to_insert[ "field_{$i}" ] = 0;
 			}
 			$wpdb->insert( $wp_track_table, $columns_to_insert, array( '%s' ) );  // db call ok.
@@ -213,5 +221,4 @@ class Wp_Solwininfotech_Assignment_2b {
 }
 
 	new Wp_Solwininfotech_Assignment_2b();
-
 	register_activation_hook( __FILE__, array( 'Wp_Solwininfotech_Assignment_2b', 'create_plugin_database_tables' ) );
