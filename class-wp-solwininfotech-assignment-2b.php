@@ -67,7 +67,7 @@ class Wp_Solwininfotech_Assignment_2b {
 	 *
 	 * @var const NO_OF_CHECKBOXES
 	 */
-	const NO_OF_CHECKBOXES = 10;
+	const NO_OF_CHECKBOXES = 100;
 
 	/**
 	 * Constructor for this class
