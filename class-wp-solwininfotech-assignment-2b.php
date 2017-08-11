@@ -242,4 +242,3 @@ class Wp_Solwininfotech_Assignment_2b {
 
 new Wp_Solwininfotech_Assignment_2b();
 register_activation_hook( __FILE__, array( 'Wp_Solwininfotech_Assignment_2b', 'create_plugin_database_tables' ) );
-Wp_Solwininfotech_Assignment_2b::create_plugin_database_tables();
