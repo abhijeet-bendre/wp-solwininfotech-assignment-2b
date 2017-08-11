@@ -21,8 +21,8 @@ function _manually_load_plugin() {
 
 	// Update array with plugins to include ...
 	$plugins_to_active = array(
-			WPSA_PLUGIN_NAME . '/' . WPSA_PLUGIN_NAME. 'php',
-			'contact-form-7/wp-contact-form-7.php'
+		WPSA_PLUGIN_NAME . '/' . WPSA_PLUGIN_NAME . 'php',
+		'contact-form-7/wp-contact-form-7.php',
 	);
 
 	update_option( 'active_plugins', $plugins_to_active );
