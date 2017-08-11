@@ -137,12 +137,12 @@ class Wp_Solwininfotech_Assignment_2b {
 	  *
 	  * @since 0.1
 	  */
-	function action_wpcf7_submit() {
+	public function action_wpcf7_submit() {
 		global $table_prefix, $wpdb;
 		$columns_to_update = array();
 		$field_id          = '';
 
-		// wpcf7_verify_nonce functon is used instaead of inbuil wp_verify_nonce function.
+		// wpcf7_verify_nonce functon is used instead of inbuil wp_verify_nonce function.
 		// @codingStandardsIgnoreLine
 		$wpcf7_nonce   = isset( $_POST['_wpcf7_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpcf7_nonce'] ) ) : ''; // Input var okay; sanitization okay
 		// @codingStandardsIgnoreLine
@@ -184,7 +184,6 @@ class Wp_Solwininfotech_Assignment_2b {
 	public function get_saved_ticket_checkboxes() {
 		 global $table_prefix, $wpdb;
 		 $saved_ticket_checkboxes     = array();
-		 $saved_ticket_checkboxes_sql = '';
 		 $wp_track_table              = $table_prefix . self::$_tblname;
 
 		 // Check if table is exists.
@@ -229,7 +228,7 @@ class Wp_Solwininfotech_Assignment_2b {
 			$create_sql .= ' PRIMARY KEY (`id`)) ' . $charset_collate;
 
 			include_once ABSPATH . '/wp-admin/includes/upgrade.php';
-			$dbdelta = dbDelta( $create_sql );
+			dbDelta( $create_sql );
 
 			for ( $i = 1; $i <= self::NO_OF_CHECKBOXES ; $i++ ) {
 					$columns_to_insert[ "field_{$i}" ] = 0;
