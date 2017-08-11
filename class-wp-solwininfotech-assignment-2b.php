@@ -20,6 +20,7 @@ Text Domain: wp_solwininfotech_assignment_2b
 */
 
 	namespace  Wp_Solwininfotech_Assignment_2b;
+
 	// Exit if accessed directly.
 	defined( 'ABSPATH' ) || exit;
 
@@ -137,22 +138,38 @@ class Wp_Solwininfotech_Assignment_2b {
 	  * @since 0.1
 	  */
 	function action_wpcf7_submit() {
-		 global $table_prefix, $wpdb;
-		 $columns_to_update = array();
-		 $field_id          = '';
+		global $table_prefix, $wpdb;
+		$columns_to_update = array();
+		$field_id          = '';
 
+		// wpcf7_verify_nonce functon is used instaead of inbuil wp_verify_nonce function.
+		// @codingStandardsIgnoreLine
+		$wpcf7_nonce   = isset( $_POST['_wpcf7_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpcf7_nonce'] ) ) : ''; // Input var okay; sanitization okay
+		// @codingStandardsIgnoreLine
+		$wpcf7_form_id = isset( $_POST['_wpcf7'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpcf7'] ) ) : ''; // Input var okay; sanitization okay.
+
+		// @codingStandardsIgnoreLine
+		if ( ! wpcf7_verify_nonce( $wpcf7_nonce, $wpcf7_form_id ) ) {
+			 wp_die( esc_html( __( 'An error occoured. Please contact Administrator! ', 'wp_solwininfotech_assignment_2b' ) ) );
+		}
+
+		// check if wpsa_cf7_addon checkbox field is not empty
+		// @codingStandardsIgnoreLine
 		if ( ! empty( $_POST[ $this->ticket_checkbox_name ] ) ) { // Input var okay.
-			$ticket_checkboxes_selected = sanitize_text_field( wp_unslash( $_POST[ $this->ticket_checkbox_name ] ) ); // Input var okay.
+			// @codingStandardsIgnoreLine
+			$ticket_checkboxes_selected = wp_unslash( $_POST[ $this->ticket_checkbox_name ] ); // Input var okay.
+
 			foreach ( $ticket_checkboxes_selected as $ticket_checkbox_key => $ticket_checkbox_value ) {
-				 $field_id = strchr( $ticket_checkbox_key, $this->ticket_checkbox_option_name );
+
 				 $field_id = explode( '_', $ticket_checkbox_key );
 				 $columns_to_update[ 'field_' . (int) $field_id[4] ] = 1;
 			}
+
 			$wpdb->update(
 				$table_prefix . '' . self::$_tblname,
 				$columns_to_update,
 				array(
-					'ID' => $this->ticket_addon_table_primary_key,
+					'ID' => self::TICKET_ADDON_TABLE_PKEY,
 				),
 				'%s'
 			); // db call ok; no-cache ok.
@@ -174,8 +191,8 @@ class Wp_Solwininfotech_Assignment_2b {
 		 $table_exists = $wpdb->get_var( $wpdb->prepare( "show tables like '%s'", $wp_track_table ) ); // db call ok; no-cache ok.
 
 		if ( '' !== $table_exists ) {
-			$saved_ticket_checkboxes_sql =
-			$results = $wpdb->get_results( $wpdb->prepare( "SELECT * from '%s' where id = '%d'" , $table_prefix . self::$_tblname, self::TICKET_ADDON_TABLE_PKEY ), ARRAY_N ); // db call ok; no-cache ok.
+			// @codingStandardsIgnoreLine
+			$results = $wpdb->get_results( $wpdb->prepare( "SELECT * from `$wp_track_table` where id = %d", self::TICKET_ADDON_TABLE_PKEY ), ARRAY_N ); // db call ok; no-cache ok.
 			if ( ! empty( $results ) ) {
 				 $saved_ticket_checkboxes = array_keys( $results[0], '1', true );
 			}
@@ -225,3 +242,4 @@ class Wp_Solwininfotech_Assignment_2b {
 
 new Wp_Solwininfotech_Assignment_2b();
 register_activation_hook( __FILE__, array( 'Wp_Solwininfotech_Assignment_2b', 'create_plugin_database_tables' ) );
+Wp_Solwininfotech_Assignment_2b::create_plugin_database_tables();
