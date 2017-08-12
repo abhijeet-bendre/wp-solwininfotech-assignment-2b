@@ -1,10 +1,16 @@
-
+  
 /* Plugin CSS Styles Start Here */
+
+.wpsa_cf7_checkbox, 
+.wpsa_cf7_checkbox label  {
+    display: inline-block;
+}
 
 .wpsa_cf7_checkbox
 {
-    display: inline-block;
-    padding: 10px 20px;
+    padding: 10px 10px;
+    text-align: center;
+    width: 100%;
 }
 
 .wpsa_cf7_checkbox input[type="checkbox"]{
@@ -15,3 +21,10 @@
     display: inline-block;
     width: 400px;
 }
+
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+.wpsa_cf7_checkbox { width: 48%; }
+}
+
