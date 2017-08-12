@@ -23,8 +23,9 @@ class Wp_Solwininfotech_Assignment_2b_Test extends WP_UnitTestCase {
 		 */
 	public static function setUpBeforeClass() {
 		global $table_prefix, $wpdb, $wpsa_2b_db_version;
-		$charset_collate = $wpdb->get_charset_collate();
+		parent::setUpBeforeClass();
 
+		$charset_collate = $wpdb->get_charset_collate();
 		self::$wp_track_table = $table_prefix . Wp_Solwininfotech_Assignment_2b::$_tblname;
 		$create_sql = 'CREATE TABLE `' . self::$wp_track_table . '` (';
 		$create_sql .= '`id` INT(11) NOT NULL AUTO_INCREMENT ,';
@@ -93,6 +94,6 @@ class Wp_Solwininfotech_Assignment_2b_Test extends WP_UnitTestCase {
 	public static function tearDownAfterClass() {
 		global $wpdb;
 		// @codingStandardsIgnoreLine
-		$wpdb->query( $wpdb->prepare( 'DROP TABLE `%s`', self::$wp_track_table ) ); // WPCS: db call ok; cache ok.
+		$wpdb->query( 'DROP TABLE ' . self::$wp_track_table ); // WPCS: db call ok; cache ok.
 	}
 }
