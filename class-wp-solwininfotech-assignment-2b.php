@@ -29,7 +29,7 @@ Text Domain: wp_solwininfotech_assignment_2b
 	$wpsa_2b_db_version = '1.0';
 
 	define( 'WPSA_PLUGIN_NAME', 'wp-solwininfotech-assignment-2b' );
-	define( 'WPSA_PLUGIN_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
+	define( 'WPSA_ACTIVATION_HOOK', dirname( __FILE__ ) . '/' . basename( __FILE__ ) );
 
 /**
  * Solwininfotech Assignment 2b Class.
@@ -86,6 +86,7 @@ class Wp_Solwininfotech_Assignment_2b {
 		 add_shortcode( 'ticket_book_cf7', array( $this, 'ticket_book_cf7' ) );
 		 add_action( 'wpcf7_submit', array( $this, 'action_wpcf7_submit' ) );
 		 add_filter( 'wpcf7_load_js', '__return_false' );
+		 register_activation_hook( WPSA_ACTIVATION_HOOK, array( $this, 'create_plugin_database_tables' ) );
 	}
 
 	 /**
@@ -210,7 +211,7 @@ class Wp_Solwininfotech_Assignment_2b {
 	  *
 	  * @since 0.1
 	  */
-	public static function create_plugin_database_tables() {
+	public function create_plugin_database_tables() {
 		 global $table_prefix, $wpdb, $wpsa_2b_db_version;
 
 		$wp_track_table = $table_prefix . self::$_tblname;
@@ -240,4 +241,3 @@ class Wp_Solwininfotech_Assignment_2b {
 }
 
 new Wp_Solwininfotech_Assignment_2b();
-register_activation_hook( __FILE__, array( 'Wp_Solwininfotech_Assignment_2b', 'create_plugin_database_tables' ) );
