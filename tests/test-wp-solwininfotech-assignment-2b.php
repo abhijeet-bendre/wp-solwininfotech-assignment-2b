@@ -93,6 +93,7 @@ class Wp_Solwininfotech_Assignment_2b_Test extends WP_UnitTestCase {
 	 */
 	public static function tearDownAfterClass() {
 		global $wpdb;
+		parent::tearDownAfterClass();
 		// @codingStandardsIgnoreLine
 		$wpdb->query( 'DROP TABLE ' . self::$wp_track_table ); // WPCS: db call ok; cache ok.
 	}
