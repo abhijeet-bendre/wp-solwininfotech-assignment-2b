@@ -94,7 +94,7 @@ class Wp_Solwininfotech_Assignment_2b {
 	  * @since 0.1
 	  */
 	public function wpsa_init_assets() {
-		 wp_register_style( 'wpsa_assignment_2b_main', plugin_dir_url( __FILE__ ) . 'assets/css/wpsa_main.css', null );
+		 wp_register_style( 'wpsa_assignment_2b_main', plugin_dir_url( __FILE__ ) . 'assets/css/wpsa_main_2b.css', null );
 		 wp_enqueue_style( 'wpsa_assignment_2b_main' );
 	}
 
